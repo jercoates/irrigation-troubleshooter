@@ -56,6 +56,6 @@ Output: `app/build/outputs/bundle/release/app-release.aab` (signed when `keystor
 - [ ] Kill the app mid-tree, reopen: position is restored
 - [ ] Search → tap a hit → lands on the right node, Back walks up the path
 - [ ] Share on a result screen produces readable text
-- [ ] 4 real screenshots uploaded
+- [x] 4 real screenshots ready in store/screenshots
 - [ ] Data safety = no data collected; Ads = No; target audience 18+
 - [ ] Privacy policy URL loads and has your real contact email

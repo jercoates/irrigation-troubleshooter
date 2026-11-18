@@ -48,4 +48,4 @@ Provided as-is, with no warranty of any kind. The developer is not liable for an
 |---|---|
 | App icon 512x512 | `store/icon-512.png` |
 | Feature graphic 1024x500 | `store/feature-graphic-1024x500.png` |
-| Phone screenshots (min 2, ideally 4) | Capture from a real device: a question screen, a result screen, search, meter reference. |
+| Phone screenshots | `store/screenshots/phone-1.jpg` to `phone-4.jpg` (1080x2150, within the 2:1 Play limit) |
