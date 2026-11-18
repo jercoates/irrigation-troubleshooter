@@ -101,7 +101,7 @@
    "start",
    "p1"
   ],
-  "text": "Meter to VAC, leads on COM and the zone terminal. If several valves are pulsing, check all of them. Steady, over 18 VAC Controller side looks fine — problem is at the valve Steady under 18 VAC, or fluctuating over 5 VAC Suspect the controller or its power No steady reading over 5 VAC Not an electrical problem"
+  "text": "Meter to VAC, leads on COM and the zone terminal. If several valves are pulsing, check all of them. Steady, over 18 VAC Controller side looks fine — problem is at the valve Steady under 18 VAC, or fluctuating over 5 VAC Suspect the controller, or its power if several zones pulse No steady reading over 5 VAC Not an electrical problem"
  },
  {
   "id": "p2",
@@ -375,7 +375,7 @@
    "p2",
    "r_p2a"
   ],
-  "text": "Remove the valve wire and test at the terminal again. Still a reading at the terminal — the problem is the controller. No reading at the terminal, but a reading between common and the zone wire — the voltage is not coming from your controller."
+  "text": "If only this zone is pulsing, suspect that zone's output at the controller. Move its wire to a known working station and run it. If it runs normally on the other station, the original station is bad. If it still pulses, the problem is in the field — test at the valve. If several zones are pulsing together, suspect the transformer or the power feeding the controller."
  },
  {
   "id": "r_p3a",
