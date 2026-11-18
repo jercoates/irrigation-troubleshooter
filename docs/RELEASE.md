@@ -40,7 +40,7 @@ Output: `app/build/outputs/bundle/release/app-release.aab` (signed when `keystor
 
 1. Push this repo to GitHub.
 2. Settings → Pages → Deploy from branch → `main` / `/docs`.
-3. URL: `https://<user>.github.io/<repo>/privacy.html`. Paste it in Play Console → App content → Privacy policy.
+3. URL: `https://jercoates.github.io/irrigation-troubleshooter/privacy.html`. Paste it in Play Console → App content → Privacy policy.
 
 ## 4. Play Console
 

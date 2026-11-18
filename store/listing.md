@@ -39,7 +39,7 @@ Provided as-is, with no warranty of any kind. The developer is not liable for an
 | Content rating | Reference / utility app. Violence, sex, language, drugs, gambling: all **No**. User-generated content: **No**. |
 | Target audience | **18 and over** (professional / electrical tool; avoids the Families policy) |
 | News app / Government / Health / Financial | **No** to all |
-| Privacy policy URL | `https://<github-user>.github.io/<repo>/privacy.html` (see docs/RELEASE.md) |
+| Privacy policy URL | `https://jercoates.github.io/irrigation-troubleshooter/privacy.html` (see docs/RELEASE.md) |
 | Permissions | None declared (verify in the Play Console "App content" page after upload) |
 
 ## Graphics
