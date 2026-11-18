@@ -1,0 +1,107 @@
+[
+ {
+  "key": "meterOhms",
+  "title": "Measuring resistance",
+  "body": [
+   "Set the meter to the ohms range (&#937;). Power to the zone must be off &mdash; resistance is measured on a dead circuit, and a meter set to ohms on a live one will read garbage and can be damaged.",
+   "At the controller, put one lead on the COM terminal and the other on the zone terminal. You are reading the whole path: the zone wire out, the solenoid coil, and the common wire back.",
+   "Watch the unit on the display. A reading that shows k or M is thousands or millions of ohms &mdash; far too high for a working solenoid, and normally means an open somewhere in the run."
+  ]
+ },
+ {
+  "key": "ohmRange",
+  "title": "Why 20 to 60 ohms",
+  "body": [
+   "A solenoid coil is a long piece of fine wire. Most 24 VAC irrigation solenoids land between about 20 and 60 ohms when new and wired normally, so that band is a quick sanity check rather than a specification. Rain Bird publishes 45&ndash;55 &#937; for the G5, 38 &#937; for the G3 and DV, and 30&ndash;39 &#937; for the G4. Hunter and Toro publish no coil resistance at all.",
+   "This band is for 24 VAC solenoids only. A DC latching solenoid &mdash; TBOS, two-wire, and most battery-run controllers &mdash; reads around 4.5 &#937;. That is correct for the part. Measured against this band it looks like a dead short, and a good solenoid gets condemned.",
+   "Do not work the number backward from a current rating. A holding current of 0.2 A on a 24 VAC valve describes impedance under load, not the resistance your meter reads on a dead circuit. The two will not agree.",
+   "Reading low means current has found a shorter path than it should &mdash; commonly a nicked wire touching another wire or ground, or a splice sitting in water.",
+   "Reading high means the path is longer or broken than it should be &mdash; a burned coil, a corroded splice, or a cut wire.",
+   "A reading inside the band does not prove the zone is good. Long wire runs add resistance, and a coil can read fine cold and fail under load."
+  ]
+ },
+ {
+  "key": "meterVac",
+  "title": "Measuring AC voltage",
+  "body": [
+   "Set the meter to VAC before touching anything. Measuring voltage on a meter still set to ohms or amps is how meters and fuses get destroyed.",
+   "The zone has to be commanded on for there to be anything to read. Turn it on at the controller first.",
+   "At the controller, read between COM and the zone terminal. Out at the valve, read between the common and the zone wire coming from the controller.",
+   "Most solenoids need at least 18 VAC to pull in. A healthy controller output sits around 24 to 30 VAC. A reading that is present but low usually means the voltage is being lost on the way &mdash; long runs, corroded splices, or a partial short."
+  ]
+ },
+ {
+  "key": "fluctuating",
+  "title": "Steady versus fluctuating",
+  "body": [
+   "A steady reading means the number holds while you watch it. A fluctuating one wanders or jumps.",
+   "Fluctuating voltage on a zone usually points upstream &mdash; a failing transformer, a bad connection feeding the controller, or unstable line power. It is the reason a valve chatters instead of either opening or staying shut.",
+   "If the incoming line side is unstable, that is an electrician's problem, not an irrigation one. If only the output side of the transformer is unstable, the transformer is the suspect."
+  ]
+ },
+ {
+  "key": "shortOpen",
+  "title": "What a low reading means",
+  "body": [
+   "Current is taking a path shorter than the full run out to the solenoid and back.",
+   "Most often that is physical damage: a trencher or an edger through a wire, a staple driven through insulation, or a wire nut sitting in a wet box.",
+   "Two valves wired in parallel on one zone will also read low, and that is normal. Check what is actually on the zone before chasing a fault."
+  ]
+ },
+ {
+  "key": "atValve",
+  "title": "Testing at the valve",
+  "body": [
+   "Everything measured at the controller includes the whole wire run. Testing at the valve splits the problem in half: solenoid on one side, wiring on the other.",
+   "Open the box, separate the splice, and read the solenoid by itself. If it is good there but bad at the controller, the fault is in the wire between them.",
+   "Then reverse it &mdash; with the zone commanded on, read voltage on the wires coming from the controller. Voltage present at the valve with a good solenoid means look at the valve itself. No voltage means the wire is the problem."
+  ]
+ },
+ {
+  "key": "wireTrace",
+  "title": "Tracing a damaged wire",
+  "body": [
+   "A wire fault has to be located, not guessed at. A fault locator puts a signal on the wire and you follow it with the receiver until the signal changes at the break.",
+   "Before reaching for one, walk the run. Damage clusters where people dig, edge, and stake &mdash; bed edges, tree rings, sign posts, and anywhere a trench crosses the line.",
+   "Check every splice you can reach first. Corroded or submerged connections are more common than cut wire and take a minute to rule out.",
+   "To tell a nick from a clean break, read from each wire to earth with the controller off. A healthy run reads above 700 k&#937; to ground. Much lower than that means insulation is damaged somewhere and the conductor is in contact with wet soil."
+  ]
+ },
+ {
+  "key": "splices",
+  "title": "Why splices fail",
+  "body": [
+   "A splice is the most common failure point in a zone run, ahead of cut wire. Most of them are install faults rather than age.",
+   "Standard dry wire nuts are not rated for burial. They wick water down the conductors, the copper corrodes, and resistance climbs until the solenoid will not pull in. They usually work for a season or two first, which is why the fault turns up long after whoever made it has gone.",
+   "Direct-bury connectors are single use. The gel or grease seal is spent once the connector has been opened, and a reused one leaks. If you open a splice to test it, put a new connector on it rather than the old one.",
+   "Strip length matters. Too long leaves bare copper outside the seal. Too short leaves too little contact inside it."
+  ]
+ },
+ {
+  "key": "mechanical",
+  "title": "When it is not electrical",
+  "body": [
+   "If the electrical side checks out, the valve itself is the next place to look. A torn or debris-fouled diaphragm, a clogged bleed port, or grit under the seat will all produce symptoms that look electrical from the controller.",
+   "A valve that will not shut off with no voltage present is mechanical by definition &mdash; nothing is holding it open electrically.",
+   "A valve that opens weakly or chatters with good voltage is usually pressure or diaphragm related. Check the master valve and any pressure regulator upstream."
+  ]
+ },
+ {
+  "key": "display",
+  "title": "Reading the controller",
+  "body": [
+   "Displays vary by make, but most traditional controllers report faults the same way: a blown output fuse, or a zone-level fault where the controller detected a bad load when it tried to energize the station.",
+   "Some older controllers have indicator lights instead of a message. Check the manual or the inside of the door for what they mean.",
+   "A fault message names a symptom, not a cause. It tells you which zone to start on; it does not tell you whether the problem is the solenoid, the wire, or the terminal."
+  ]
+ },
+ {
+  "key": "doubler",
+  "title": "Diodes and zone doublers",
+  "body": [
+   "A diode on a terminal usually means someone ran more than one valve on a single station, using polarity to separate them.",
+   "That changes what your meter sees, and readings from the controller will not mean what this guide assumes.",
+   "Track down which wire actually goes to the valve you are working on and test from there instead."
+  ]
+ }
+]

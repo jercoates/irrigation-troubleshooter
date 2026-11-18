@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Irrigation Troubleshooter</string>
+    <string name="search_title">Search symptoms</string>
+    <string name="help_title">Meter reference</string>
+    <string name="action_search">Search symptoms</string>
+    <string name="action_share">Share result</string>
+    <string name="action_start_over">Start over</string>
+    <string name="action_meter">Meter reference</string>
+    <string name="action_disclaimer">Disclaimer</string>
+    <string name="action_keep_on">Keep screen on</string>
+    <string name="action_about">About</string>
+    <string name="search_hint">Type a symptom, e.g. pulsing</string>
+    <string name="search_hint_empty">Type what you are seeing to jump straight to the relevant step.</string>
+    <string name="search_no_results">No matching steps. Try a shorter or different word.</string>
+    <string name="share_subject">Irrigation troubleshooting result</string>
+    <string name="share_chooser">Share result</string>
+    <string name="webview_too_old">This app needs a newer Android System WebView. Please update it from Google Play and try again.</string>
+    <string name="about_body">Version %1$s\n\nStep-by-step electrical troubleshooting for traditional sprinkler controllers. Works entirely offline: no account, no network access, no data collected.\n\nProvided as-is, with no warranty of any kind. You are responsible for verifying any result against your own equipment, manufacturer documentation, and applicable code.</string>
+</resources>

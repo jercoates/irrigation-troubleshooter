@@ -1,0 +1,623 @@
+[
+ {
+  "id": "p1",
+  "end": false,
+  "title": "Check voltage on a pulsing zone at the controller.",
+  "crumb": "Pulsing · Step 1",
+  "trail": [
+   "Start"
+  ],
+  "path": [
+   "start",
+   "p1"
+  ],
+  "text": "Meter to VAC, leads on COM and the zone terminal. If several valves are pulsing, check all of them. Steady, over 18 VAC Controller side looks fine — problem is at the valve Steady under 18 VAC, or fluctuating over 5 VAC Suspect the controller or its power No steady reading over 5 VAC Not an electrical problem"
+ },
+ {
+  "id": "p2",
+  "end": false,
+  "title": "Unplug the controller, count to three, plug it back in. Check voltage again.",
+  "crumb": "Pulsing · Step 2",
+  "trail": [
+   "Start",
+   "Pulsing · Step 1"
+  ],
+  "path": [
+   "start",
+   "p1",
+   "p2"
+  ],
+  "text": " Over 18 VAC, steady or not Isolate controller from wiring Still not over 18 VAC Go test at the valve"
+ },
+ {
+  "id": "p3",
+  "end": false,
+  "title": "At the valve box, disconnect the wires to the valve and turn the zone on. Check voltage.",
+  "crumb": "Pulsing · Step 3",
+  "trail": [
+   "Start",
+   "Pulsing · Step 1"
+  ],
+  "path": [
+   "start",
+   "p1",
+   "p3"
+  ],
+  "text": "Meter to VAC, leads on the common and the zone wire coming from the controller. Over 18 VAC Power is reaching the valve Under 18 VAC Power is being lost in the wire — split the splice from the run"
+ },
+ {
+  "id": "r_backfeed",
+  "end": true,
+  "title": "Voltage is not coming from your controller",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "Valve staying on",
+   "Staying on · Step 1",
+   "Staying on · Step 2",
+   "Staying on · Step 2",
+   "Staying on · Step 3"
+  ],
+  "path": [
+   "start",
+   "stay_pre",
+   "s1",
+   "s2",
+   "s2b",
+   "s3",
+   "r_backfeed"
+  ],
+  "text": "No reading at the terminal, but a reading on the zone wire, means something else is energizing that wire. Look for a second controller, a crossed wire, or induced voltage on a long parallel run."
+ },
+ {
+  "id": "r_controller",
+  "end": true,
+  "title": "Problem is the controller",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "Valve staying on",
+   "Staying on · Step 1",
+   "Staying on · Step 2",
+   "Staying on · Step 2",
+   "Staying on · Step 3"
+  ],
+  "path": [
+   "start",
+   "stay_pre",
+   "s1",
+   "s2",
+   "s2b",
+   "s3",
+   "r_controller"
+  ],
+  "text": "Voltage is present on the terminal with the valve wire removed, so the controller is putting it out on its own."
+ },
+ {
+  "id": "r_doubler",
+  "end": true,
+  "title": "Diode or zone doubler present",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "Valve not coming on",
+   "Valve not coming on · Step 1",
+   "Valve not coming on · Step 2"
+  ],
+  "path": [
+   "start",
+   "vnc_pre",
+   "vnc1",
+   "vnc2",
+   "r_doubler"
+  ],
+  "text": "This guide does not cover troubleshooting past a diode or doubler. Track down the wire that actually feeds the valve you are working on and test from there."
+ },
+ {
+  "id": "r_fixed",
+  "end": true,
+  "title": "Resolved",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "Valve staying on",
+   "Staying on · Step 1",
+   "Staying on · Step 1"
+  ],
+  "path": [
+   "start",
+   "stay_pre",
+   "s1",
+   "s1b",
+   "r_fixed"
+  ],
+  "text": "Verify by running the zone through a normal cycle before you leave."
+ },
+ {
+  "id": "r_mech",
+  "end": true,
+  "title": "Mechanical, not electrical",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "Pulsing · Step 1"
+  ],
+  "path": [
+   "start",
+   "p1",
+   "r_mech"
+  ],
+  "text": "There is not enough voltage present for this to be an electrical fault. Check the valve and the master valve for a pressure regulator, or a bad diaphragm."
+ },
+ {
+  "id": "r_nowire",
+  "end": true,
+  "title": "No wire on the terminal",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "Valve not coming on",
+   "Valve not coming on · Step 1",
+   "Valve not coming on · Step 2"
+  ],
+  "path": [
+   "start",
+   "vnc_pre",
+   "vnc1",
+   "vnc2",
+   "r_nowire"
+  ],
+  "text": "That is the problem. Find where the zone wire went and land it."
+ },
+ {
+  "id": "r_p2a",
+  "end": true,
+  "title": "Voltage present after power cycling",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "Pulsing · Step 1",
+   "Pulsing · Step 2"
+  ],
+  "path": [
+   "start",
+   "p1",
+   "p2",
+   "r_p2a"
+  ],
+  "text": "Remove the valve wire and test at the terminal again. Still a reading at the terminal — the problem is the controller. No reading at the terminal, but a reading between common and the zone wire — the voltage is not coming from your controller."
+ },
+ {
+  "id": "r_p3a",
+  "end": true,
+  "title": "Over 18 VAC at the valve",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "Pulsing · Step 1",
+   "Pulsing · Step 3"
+  ],
+  "path": [
+   "start",
+   "p1",
+   "p3",
+   "r_p3a"
+  ],
+  "text": "Reconnect a solenoid and test the voltage again. If it still reads over 18 VAC, try a new solenoid. If it still will not work and the voltage is under 21 VAC, that valve may need more voltage than the run is delivering. If voltage is good and a new solenoid does not fix it, the problem is the valve itself. Take it apart and look."
+ },
+ {
+  "id": "r_s2b",
+  "end": true,
+  "title": "Problem is probably at the valve",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "Valve staying on",
+   "Staying on · Step 1",
+   "Staying on · Step 2"
+  ],
+  "path": [
+   "start",
+   "stay_pre",
+   "s1",
+   "s2",
+   "r_s2b"
+  ],
+  "text": "Nothing is holding it open electrically. To confirm, remove the zone wire and see whether it shuts off."
+ },
+ {
+  "id": "r_splice",
+  "end": true,
+  "title": "The splice was the fault",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "Pulsing · Step 1",
+   "Pulsing · Step 3",
+   "Valve not coming on · Step 7"
+  ],
+  "path": [
+   "start",
+   "p1",
+   "p3",
+   "vnc7",
+   "r_splice"
+  ],
+  "text": "The wire run between the controller and the valve is intact, so the resistance you measured earlier was in the connection, not the conductor. Cut back past the corroded copper to clean wire and remake the splice with new direct-bury connectors — not the ones you just took off, and not dry wire nuts. Reconnect the solenoid and run the zone to confirm."
+ },
+ {
+  "id": "r_vnc4a",
+  "end": true,
+  "title": "No steady voltage over 18 VAC",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "Valve not coming on",
+   "Valve not coming on · Step 1",
+   "Valve not coming on · Step 3",
+   "Valve not coming on · Step 4"
+  ],
+  "path": [
+   "start",
+   "vnc_pre",
+   "vnc1",
+   "vnc3",
+   "vnc4",
+   "r_vnc4a"
+  ],
+  "text": "Turn on a known working zone and check its voltage. If that zone reads the same, the transformer is the likely problem. If that zone reads 18–30 VAC, the problem may be the controller. If there is a spare station, move the wire to it and see whether the zone runs."
+ },
+ {
+  "id": "r_vnc4b",
+  "end": true,
+  "title": "Voltage present but out of range",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "Valve not coming on",
+   "Valve not coming on · Step 1",
+   "Valve not coming on · Step 3",
+   "Valve not coming on · Step 4"
+  ],
+  "path": [
+   "start",
+   "vnc_pre",
+   "vnc1",
+   "vnc3",
+   "vnc4",
+   "r_vnc4b"
+  ],
+  "text": "Unplug the controller power, count to three, and plug it back in. Test again. If it still will not read 24–30 VAC, suspect a bad controller or transformer."
+ },
+ {
+  "id": "r_vnc6a",
+  "end": true,
+  "title": "Over 18 VAC at the valve",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "Valve not coming on",
+   "Valve not coming on · Step 1",
+   "Valve not coming on · Step 3",
+   "Valve not coming on · Step 5",
+   "Valve not coming on · Step 6"
+  ],
+  "path": [
+   "start",
+   "vnc_pre",
+   "vnc1",
+   "vnc3",
+   "vnc5",
+   "vnc6",
+   "r_vnc6a"
+  ],
+  "text": "Reconnect a solenoid and test again. If it still reads over 18 VAC, try a new solenoid. If it still will not run and the voltage is under 21 VAC, that valve may need more voltage than the run is delivering. Troubleshoot the wire path."
+ },
+ {
+  "id": "r_wire",
+  "end": true,
+  "title": "Problem is in the wiring",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "Pulsing · Step 1",
+   "Pulsing · Step 3",
+   "Valve not coming on · Step 7"
+  ],
+  "path": [
+   "start",
+   "p1",
+   "p3",
+   "vnc7",
+   "r_wire"
+  ],
+  "text": "Voltage is leaving the controller but not arriving at the valve. Track the wires and locate the damage with a fault locator."
+ },
+ {
+  "id": "s1",
+  "end": false,
+  "title": "Is the zone showing as on at the controller?",
+  "crumb": "Staying on · Step 1",
+  "trail": [
+   "Start",
+   "Valve staying on"
+  ],
+  "path": [
+   "start",
+   "stay_pre",
+   "s1"
+  ],
+  "text": " Yes — turn the dial to off and wait 30 seconds Then check whether the zone shuts off No, controller shows it off Check the electrical side anyway"
+ },
+ {
+  "id": "s1b",
+  "end": false,
+  "title": "Did the zone shut off?",
+  "crumb": "Staying on · Step 1",
+  "trail": [
+   "Start",
+   "Valve staying on",
+   "Staying on · Step 1"
+  ],
+  "path": [
+   "start",
+   "stay_pre",
+   "s1",
+   "s1b"
+  ],
+  "text": " Yes, it shut off It was running from the controller No, still running Continue"
+ },
+ {
+  "id": "s2",
+  "end": false,
+  "title": "Controller off. Voltage check on the zone terminal.",
+  "crumb": "Staying on · Step 2",
+  "trail": [
+   "Start",
+   "Valve staying on",
+   "Staying on · Step 1"
+  ],
+  "path": [
+   "start",
+   "stay_pre",
+   "s1",
+   "s2"
+  ],
+  "text": "Meter to VAC, leads on COM and the zone terminal. Over 18 VAC with the controller off Power cycle, then retest Under 18 VAC Problem is probably at the valve"
+ },
+ {
+  "id": "s2b",
+  "end": false,
+  "title": "After unplugging, counting to three, and plugging back in — still over 18 VAC?",
+  "crumb": "Staying on · Step 2",
+  "trail": [
+   "Start",
+   "Valve staying on",
+   "Staying on · Step 1",
+   "Staying on · Step 2"
+  ],
+  "path": [
+   "start",
+   "stay_pre",
+   "s1",
+   "s2",
+   "s2b"
+  ],
+  "text": " Yes, still reading voltage Continue No, it cleared Controller had latched"
+ },
+ {
+  "id": "s3",
+  "end": false,
+  "title": "Remove the valve wire and test at the terminal again.",
+  "crumb": "Staying on · Step 3",
+  "trail": [
+   "Start",
+   "Valve staying on",
+   "Staying on · Step 1",
+   "Staying on · Step 2",
+   "Staying on · Step 2"
+  ],
+  "path": [
+   "start",
+   "stay_pre",
+   "s1",
+   "s2",
+   "s2b",
+   "s3"
+  ],
+  "text": " Still reading voltage at the terminal  No reading at the terminal Now read between common and the zone wire"
+ },
+ {
+  "id": "start",
+  "end": false,
+  "title": "What is the zone doing?",
+  "crumb": "Start",
+  "trail": [],
+  "path": [
+   "start"
+  ],
+  "text": "Troubleshoot one zone at a time. Read the notes below before starting. Valve not coming on A single zone will not start No valves coming on Nothing on the controller runs Valve pulsing on and off Chattering, cycling, or not opening fully Valve not turning on all the way Opens weakly or partially Valve staying on Will not shut off"
+ },
+ {
+  "id": "stay_pre",
+  "end": false,
+  "title": "This is usually not an electrical problem.",
+  "crumb": "Valve staying on",
+  "trail": [
+   "Start"
+  ],
+  "path": [
+   "start",
+   "stay_pre"
+  ],
+  "text": "Check whether the solenoid is buzzing. Continue Work through the electrical side to confirm"
+ },
+ {
+  "id": "vnc1",
+  "end": false,
+  "title": "Check the display on the controller.",
+  "crumb": "Valve not coming on · Step 1",
+  "trail": [
+   "Start",
+   "Valve not coming on"
+  ],
+  "path": [
+   "start",
+   "vnc_pre",
+   "vnc1"
+  ],
+  "text": "Some controllers use indicator lights instead of a message. It shows a fuse fault Check the fuse and replace it if blown, then continue It shows a zone fault Note the zone number No fault shown Display looks normal"
+ },
+ {
+  "id": "vnc2",
+  "end": false,
+  "title": "Is there a wire connected to the terminal for that zone?",
+  "crumb": "Valve not coming on · Step 2",
+  "trail": [
+   "Start",
+   "Valve not coming on",
+   "Valve not coming on · Step 1"
+  ],
+  "path": [
+   "start",
+   "vnc_pre",
+   "vnc1",
+   "vnc2"
+  ],
+  "text": " No wire on the terminal That is your answer There is a diode or zone doubler Beyond what this guide covers Wire is present and landed Continue"
+ },
+ {
+  "id": "vnc3",
+  "end": false,
+  "title": "Resistance check at the controller.",
+  "crumb": "Valve not coming on · Step 3",
+  "trail": [
+   "Start",
+   "Valve not coming on",
+   "Valve not coming on · Step 1"
+  ],
+  "path": [
+   "start",
+   "vnc_pre",
+   "vnc1",
+   "vnc3"
+  ],
+  "text": "Turn the controller OFF. Put the meter on ohms, one lead on COM and one on the zone terminal. Between 20 and 60 Ω Wires and solenoid are probably good — check that the display shows no k or M Below 20 Ω Usually a short Above 60 Ω Usually a bad solenoid"
+ },
+ {
+  "id": "vnc4",
+  "end": false,
+  "title": "Voltage check at the controller.",
+  "crumb": "Valve not coming on · Step 4",
+  "trail": [
+   "Start",
+   "Valve not coming on",
+   "Valve not coming on · Step 1",
+   "Valve not coming on · Step 3"
+  ],
+  "path": [
+   "start",
+   "vnc_pre",
+   "vnc1",
+   "vnc3",
+   "vnc4"
+  ],
+  "text": "Turn the zone on. Meter to VAC, leads on COM and the zone terminal. No steady reading over 18 VAC Compare against a known working zone Reading present but not 24–30 VAC Power cycle and retest Between 24 and 30 VAC Controller output is good"
+ },
+ {
+  "id": "vnc5",
+  "end": false,
+  "title": "Go to the valve. Remove the splice and check the solenoid by itself.",
+  "crumb": "Valve not coming on · Step 5",
+  "trail": [
+   "Start",
+   "Valve not coming on",
+   "Valve not coming on · Step 1",
+   "Valve not coming on · Step 3"
+  ],
+  "path": [
+   "start",
+   "vnc_pre",
+   "vnc1",
+   "vnc3",
+   "vnc5"
+  ],
+  "text": " Solenoid reads 20–60 Ω Solenoid is good — problem is in the wiring Solenoid reads out of range Replace it and try the zone"
+ },
+ {
+  "id": "vnc5b",
+  "end": false,
+  "title": "Did the zone run with the new solenoid?",
+  "crumb": "Valve not coming on · Step 5",
+  "trail": [
+   "Start",
+   "Valve not coming on",
+   "Valve not coming on · Step 1",
+   "Valve not coming on · Step 3",
+   "Valve not coming on · Step 5"
+  ],
+  "path": [
+   "start",
+   "vnc_pre",
+   "vnc1",
+   "vnc3",
+   "vnc5",
+   "vnc5b"
+  ],
+  "text": " Yes, it runs now Bad solenoid — done Still will not run Keep going"
+ },
+ {
+  "id": "vnc6",
+  "end": false,
+  "title": "Voltage check at the valve.",
+  "crumb": "Valve not coming on · Step 6",
+  "trail": [
+   "Start",
+   "Valve not coming on",
+   "Valve not coming on · Step 1",
+   "Valve not coming on · Step 3",
+   "Valve not coming on · Step 5"
+  ],
+  "path": [
+   "start",
+   "vnc_pre",
+   "vnc1",
+   "vnc3",
+   "vnc5",
+   "vnc6"
+  ],
+  "text": "Turn the zone on. Meter to VAC, leads on the common and the zone wire coming from the controller. Most solenoids need at least 18 VAC. Over 18 VAC at the valve Power is getting there Under 18 VAC at the valve Power is being lost in the wire — split the splice from the run"
+ },
+ {
+  "id": "vnc7",
+  "end": false,
+  "title": "Separate the splice. Twist the zone wire and the common together at the valve, go back to the controller, and read resistance on that zone.",
+  "crumb": "Valve not coming on · Step 7",
+  "trail": [
+   "Start",
+   "Pulsing · Step 1",
+   "Pulsing · Step 3"
+  ],
+  "path": [
+   "start",
+   "p1",
+   "p3",
+   "vnc7"
+  ],
+  "text": "This takes the solenoid out of the circuit. What is left is the wire run out and back, so the reading tells you whether the conductor is intact. About 5 Ω or less Wire run is intact — the fault was in the splice Still high, or open There is a break between the valve and the controller"
+ },
+ {
+  "id": "vnc_pre",
+  "end": false,
+  "title": "First, rule out the water side.",
+  "crumb": "Valve not coming on",
+  "trail": [
+   "Start"
+  ],
+  "path": [
+   "start",
+   "vnc_pre"
+  ],
+  "text": "Try turning on a different valve on the same controller and the same main line. An isolation valve may be closed, or there may be a master valve problem. Other zones run fine Water side is good — continue electrically Nothing runs on that main Check isolation valves and the master valve first"
+ }
+]
