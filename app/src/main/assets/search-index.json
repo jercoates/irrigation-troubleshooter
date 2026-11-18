@@ -1,5 +1,95 @@
 [
  {
+  "id": "nv1",
+  "end": false,
+  "title": "Is the controller display on?",
+  "crumb": "No valves · Step 1",
+  "trail": [
+   "Start"
+  ],
+  "path": [
+   "start",
+   "nv1"
+  ],
+  "text": "If nothing runs on any zone, start with the controller and its power before looking at individual valves. Display is dead The controller has no power Display is on The controller has power — continue"
+ },
+ {
+  "id": "nv2",
+  "end": false,
+  "title": "Check the transformer output at the controller.",
+  "crumb": "No valves · Step 2",
+  "trail": [
+   "Start",
+   "No valves · Step 1"
+  ],
+  "path": [
+   "start",
+   "nv1",
+   "nv2"
+  ],
+  "text": "Meter to VAC, leads on the two 24 volt input terminals where the transformer wires land. Run a zone first if the controller only supplies power while a zone is on. Between 24 and 30 VAC Transformer output is good — continue Not in range, or no reading The transformer or its connections"
+ },
+ {
+  "id": "nv3",
+  "end": false,
+  "title": "Check the common connection at the controller.",
+  "crumb": "No valves · Step 3",
+  "trail": [
+   "Start",
+   "No valves · Step 1",
+   "No valves · Step 2"
+  ],
+  "path": [
+   "start",
+   "nv1",
+   "nv2",
+   "nv3"
+  ],
+  "text": "Look at the common (COM) terminal and the wire landed on it. Common problems at the controller are one of the most frequent reasons nothing runs. Loose, corroded, missing, or not seated Found a bad common connection at the controller Looks good Continue to the valve boxes"
+ },
+ {
+  "id": "nv4",
+  "end": false,
+  "title": "Check the common in the valve boxes.",
+  "crumb": "No valves · Step 4",
+  "trail": [
+   "Start",
+   "No valves · Step 1",
+   "No valves · Step 2",
+   "No valves · Step 3"
+  ],
+  "path": [
+   "start",
+   "nv1",
+   "nv2",
+   "nv3",
+   "nv4"
+  ],
+  "text": "The common is usually daisy-chained from valve to valve. If one leg of the chain has dropped, every valve past that point loses its common and will not run. Found a dropped or loose common leg Everything past that point is affected Common is intact in every box I can reach Continue"
+ },
+ {
+  "id": "nv5",
+  "end": false,
+  "title": "Does the system have a master valve or a pump start relay?",
+  "crumb": "No valves · Step 5",
+  "trail": [
+   "Start",
+   "No valves · Step 1",
+   "No valves · Step 2",
+   "No valves · Step 3",
+   "No valves · Step 4"
+  ],
+  "path": [
+   "start",
+   "nv1",
+   "nv2",
+   "nv3",
+   "nv4",
+   "nv5"
+  ],
+  "text": "Both are wired off the controller and the common. A fault in either one can stop every zone. Yes Check the master valve or pump start circuit No, or not sure Work one zone at a time"
+ },
+ {
   "id": "p1",
   "end": false,
   "title": "Check voltage on a pulsing zone at the controller.",
@@ -168,6 +258,106 @@
    "r_nowire"
   ],
   "text": "That is the problem. Find where the zone wire went and land it."
+ },
+ {
+  "id": "r_nv_chain",
+  "end": true,
+  "title": "Dropped common in the valve boxes",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "No valves · Step 1",
+   "No valves · Step 2",
+   "No valves · Step 3",
+   "No valves · Step 4"
+  ],
+  "path": [
+   "start",
+   "nv1",
+   "nv2",
+   "nv3",
+   "nv4",
+   "r_nv_chain"
+  ],
+  "text": "Remake the broken connection with a new direct-bury connector, not the one you took off. Run the zones past that point to confirm."
+ },
+ {
+  "id": "r_nv_common",
+  "end": true,
+  "title": "Bad common connection at the controller",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "No valves · Step 1",
+   "No valves · Step 2",
+   "No valves · Step 3"
+  ],
+  "path": [
+   "start",
+   "nv1",
+   "nv2",
+   "nv3",
+   "r_nv_common"
+  ],
+  "text": "Clean and reseat the common wire at the COM terminal, or cut back to clean copper and land it again. Run the zones to confirm."
+ },
+ {
+  "id": "r_nv_master",
+  "end": true,
+  "title": "Master valve or pump start circuit",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "No valves · Step 1",
+   "No valves · Step 2",
+   "No valves · Step 3",
+   "No valves · Step 4",
+   "No valves · Step 5"
+  ],
+  "path": [
+   "start",
+   "nv1",
+   "nv2",
+   "nv3",
+   "nv4",
+   "nv5",
+   "r_nv_master"
+  ],
+  "text": "Check the master valve and pump start relay wiring and common, and the voltage on their circuit when a zone is commanded on. If they are good, continue with the single-zone steps from the controller."
+ },
+ {
+  "id": "r_nv_power",
+  "end": true,
+  "title": "Controller has no power",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "No valves · Step 1"
+  ],
+  "path": [
+   "start",
+   "nv1",
+   "r_nv_power"
+  ],
+  "text": "Check the power source first: the outlet or breaker, then the transformer and its connections, then the controller fuse. Read the power at each point in turn until you find where it stops."
+ },
+ {
+  "id": "r_nv_transformer",
+  "end": true,
+  "title": "Transformer output is out of range",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "No valves · Step 1",
+   "No valves · Step 2"
+  ],
+  "path": [
+   "start",
+   "nv1",
+   "nv2",
+   "r_nv_transformer"
+  ],
+  "text": "Check the connections where the transformer wires land at the controller, then the transformer itself and its line-side supply. If the connections are good and the output is still out of range, the transformer is the likely problem."
  },
  {
   "id": "r_p2a",
@@ -465,7 +655,7 @@
  {
   "id": "stay_pre",
   "end": false,
-  "title": "This is usually not an electrical problem.",
+  "title": "This is usually not an electrical problem. Is the solenoid buzzing?",
   "crumb": "Valve staying on",
   "trail": [
    "Start"
@@ -474,7 +664,7 @@
    "start",
    "stay_pre"
   ],
-  "text": "Check whether the solenoid is buzzing. Continue Work through the electrical side to confirm"
+  "text": "An audible buzz often points to low voltage or a shorted solenoid, but not always. Some solenoids simply buzz. Yes, it is buzzing Often low voltage or a shorted solenoid — work through the electrical side No buzzing Work through the electrical side to confirm"
  },
  {
   "id": "vnc1",

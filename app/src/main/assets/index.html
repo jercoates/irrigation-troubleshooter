@@ -304,7 +304,7 @@ footer{color:var(--muted);font-size:12.5px;text-align:center;margin-top:26px;lin
       <tr><td>254</td><td class="v">56 &#937;</td></tr>
       <tr><th>Rain Bird</th><th class="v">New</th></tr>
       <tr><td>PE solenoid</td><td class="v">36 &#937;</td></tr>
-      <tr><td>DV solenoid</td><td class="v">42 &#937;</td></tr>
+      <tr><td>DV solenoid (Rain Bird publishes 38 &#937;)</td><td class="v">42 &#937;</td></tr>
     </table>
     </div>
     <p style="margin:12px 0 0;font-size:13.5px;color:var(--muted)">New solenoid values vary. These are the solenoid alone &mdash; they do not include wire runs or splices.</p>
@@ -417,7 +417,7 @@ start: {
   detail:"Troubleshoot one zone at a time. Read the notes below before starting.",
   opts:[
     {l:"Valve not coming on", s:"A single zone will not start", go:"vnc_pre"},
-    {l:"No valves coming on", s:"Nothing on the controller runs", go:"vnc_pre"},
+    {l:"No valves coming on", s:"Nothing on the controller runs", go:"nv1"},
     {l:"Valve pulsing on and off", s:"Chattering, cycling, or not opening fully", go:"p1"},
     {l:"Valve not turning on all the way", s:"Opens weakly or partially", go:"p1"},
     {l:"Valve staying on", s:"Will not shut off", go:"stay_pre"}
@@ -539,6 +539,58 @@ vnc7b: {
   ]
 },
 
+nv1: {
+  crumb:"No valves \u00b7 Step 1",
+  q:"Is the controller display on?",
+  detail:"If nothing runs on any zone, start with the controller and its power before looking at individual valves.",
+  opts:[
+    {l:"Display is dead", s:"The controller has no power", go:"r_nv_power"},
+    {l:"Display is on", s:"The controller has power \u2014 continue", go:"nv2"}
+  ]
+},
+
+nv2: {
+  crumb:"No valves \u00b7 Step 2",
+  q:"Check the transformer output at the controller.",
+  detail:"Meter to VAC, leads on the two 24 volt input terminals where the transformer wires land. Run a zone first if the controller only supplies power while a zone is on.",
+  help:"meterVac",
+  opts:[
+    {l:"Between 24 and 30 VAC", s:"Transformer output is good \u2014 continue", go:"nv3"},
+    {l:"Not in range, or no reading", s:"The transformer or its connections", go:"r_nv_transformer"}
+  ]
+},
+
+nv3: {
+  crumb:"No valves \u00b7 Step 3",
+  q:"Check the common connection at the controller.",
+  detail:"Look at the common (COM) terminal and the wire landed on it. Common problems at the controller are one of the most frequent reasons nothing runs.",
+  opts:[
+    {l:"Loose, corroded, missing, or not seated", s:"Found a bad common connection at the controller", go:"r_nv_common"},
+    {l:"Looks good", s:"Continue to the valve boxes", go:"nv4"}
+  ]
+},
+
+nv4: {
+  crumb:"No valves \u00b7 Step 4",
+  q:"Check the common in the valve boxes.",
+  detail:"The common is usually daisy-chained from valve to valve. If one leg of the chain has dropped, every valve past that point loses its common and will not run.",
+  help:"splices",
+  opts:[
+    {l:"Found a dropped or loose common leg", s:"Everything past that point is affected", go:"r_nv_chain"},
+    {l:"Common is intact in every box I can reach", s:"Continue", go:"nv5"}
+  ]
+},
+
+nv5: {
+  crumb:"No valves \u00b7 Step 5",
+  q:"Does the system have a master valve or a pump start relay?",
+  detail:"Both are wired off the controller and the common. A fault in either one can stop every zone.",
+  opts:[
+    {l:"Yes", s:"Check the master valve or pump start circuit", go:"r_nv_master"},
+    {l:"No, or not sure", s:"Work one zone at a time", go:"vnc3"}
+  ]
+},
+
 p1: {
   crumb:"Pulsing \u00b7 Step 1",
   q:"Check voltage on a pulsing zone at the controller.",
@@ -576,11 +628,12 @@ p3: {
 
 stay_pre: {
   crumb:"Valve staying on",
-  q:"This is usually not an electrical problem.",
-  detail:"Check whether the solenoid is buzzing.",
+  q:"This is usually not an electrical problem. Is the solenoid buzzing?",
+  detail:"An audible buzz often points to low voltage or a shorted solenoid, but not always. Some solenoids simply buzz.",
   help:"mechanical",
   opts:[
-    {l:"Continue", s:"Work through the electrical side to confirm", go:"s1"}
+    {l:"Yes, it is buzzing", s:"Often low voltage or a shorted solenoid — work through the electrical side", go:"s1"},
+    {l:"No buzzing", s:"Work through the electrical side to confirm", go:"s1"}
   ]
 },
 
@@ -662,6 +715,26 @@ r_short: {end:1, h:"Short in the wire run", help:"wireTrace",
   b:["With the wires apart at the valve and the solenoid out of the circuit, the zone wire and the common still read as connected. Somewhere in the run the insulation is damaged and the two conductors are touching.",
      "Ask whether anyone has dug along the wire route in the last few years: new landscaping, a fence, a trench, a sprinkler or utility repair. Digging is the most common cause of damaged wire.",
      "Finding the exact spot takes a wire tracer or fault locator, which is beyond this guide."]},
+
+r_nv_power: {end:1, h:"Controller has no power",
+  b:["Check the power source first: the outlet or breaker, then the transformer and its connections, then the controller fuse.",
+     "Read the power at each point in turn until you find where it stops."]},
+
+r_nv_transformer: {end:1, h:"Transformer output is out of range",
+  b:["Check the connections where the transformer wires land at the controller, then the transformer itself and its line-side supply.",
+     "If the connections are good and the output is still out of range, the transformer is the likely problem."]},
+
+r_nv_common: {end:1, h:"Bad common connection at the controller",
+  b:["Clean and reseat the common wire at the COM terminal, or cut back to clean copper and land it again.",
+     "Run the zones to confirm."]},
+
+r_nv_chain: {end:1, h:"Dropped common in the valve boxes",
+  b:["Remake the broken connection with a new direct-bury connector, not the one you took off.",
+     "Run the zones past that point to confirm."]},
+
+r_nv_master: {end:1, h:"Master valve or pump start circuit",
+  b:["Check the master valve and pump start relay wiring and common, and the voltage on their circuit when a zone is commanded on.",
+     "If they are good, continue with the single-zone steps from the controller."]},
 
 r_wire: {end:1, h:"Problem is in the wiring", help:"wireTrace",
   b:["Voltage is leaving the controller but not arriving at the valve.",

@@ -74,11 +74,11 @@ for (const e of index) {
 
 // summary reports the answer actually given, even when two options lead to the same step
 run("androidInit(['start'], true)");
-run("stack.push(NODES.start.opts[1].go); picks.push(1); render()");
-assert.equal(run("NODES.start.opts[0].go"), run("NODES.start.opts[1].go"), "fixture: two options share a target");
+run("stack.push(NODES.start.opts[3].go); picks.push(3); render()");
+assert.equal(run("NODES.start.opts[2].go"), run("NODES.start.opts[3].go"), "fixture: two options share a target");
 const sum = run("androidSummary()");
-assert.ok(sum.includes(run("toText(NODES.start.opts[1].l)")), "summary names the option the user chose");
-assert.ok(!sum.includes("→ " + run("toText(NODES.start.opts[0].l)")), "summary does not name the other option");
+assert.ok(sum.includes(run("toText(NODES.start.opts[3].l)")), "summary names the option the user chose");
+assert.ok(!sum.includes("→ " + run("toText(NODES.start.opts[2].l)")), "summary does not name the other option");
 
 // a search jump is reported as a jump, not as an invented path
 const deep = index.find((e) => e.path.length > 2);
@@ -88,7 +88,7 @@ const jumped = run("androidSummary()");
 assert.ok(jumped.includes("via symptom search"));
 assert.ok(!jumped.includes("1. "), "no fabricated answers before the jump point");
 // restoring a saved stack with an ambiguous step does not guess
-run("androidRestore(['start', NODES.start.opts[0].go])");
+run("androidRestore(['start', NODES.start.opts[2].go])");
 assert.ok(run("androidSummary()").includes("(answer not recorded)"));
 
 // back-button state: system back only intercepted when the page can go back
