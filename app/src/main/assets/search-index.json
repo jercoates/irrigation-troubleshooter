@@ -226,9 +226,9 @@
   "text": "Nothing is holding it open electrically. To confirm, remove the zone wire and see whether it shuts off."
  },
  {
-  "id": "r_splice",
+  "id": "r_short",
   "end": true,
-  "title": "The splice was the fault",
+  "title": "Short in the wire run",
   "crumb": "Result",
   "trail": [
    "Start",
@@ -241,9 +241,31 @@
    "p1",
    "p3",
    "vnc7",
+   "r_short"
+  ],
+  "text": "With the wires apart at the valve and the solenoid out of the circuit, the zone wire and the common still read as connected. Somewhere in the run the insulation is damaged and the two conductors are touching. Split the run at splices or junction boxes and read each section with its far end open. The section that reads low holds the short. Replace the damaged section rather than splicing into old, wet cable. Then reconnect the solenoid, run the zone, and verify over 18 VAC at the valve."
+ },
+ {
+  "id": "r_splice",
+  "end": true,
+  "title": "The splice was the fault",
+  "crumb": "Result",
+  "trail": [
+   "Start",
+   "Pulsing · Step 1",
+   "Pulsing · Step 3",
+   "Valve not coming on · Step 7",
+   "Valve not coming on · Step 8"
+  ],
+  "path": [
+   "start",
+   "p1",
+   "p3",
+   "vnc7",
+   "vnc7b",
    "r_splice"
   ],
-  "text": "The wire run between the controller and the valve is intact, so the resistance you measured earlier was in the connection, not the conductor. Cut back past the corroded copper to clean wire and remake the splice with new direct-bury connectors — not the ones you just took off, and not dry wire nuts. Reconnect the solenoid and run the zone to confirm."
+  "text": "The wire run between the controller and the valve is intact, so the loss was in the connection, not the conductor. Cut back past the corroded copper to clean wire and remake the splice with new direct-bury connectors — not the ones you just took off, and not dry wire nuts. Reconnect the solenoid, run the zone, and recheck the voltage at the valve. It should now read over 18 VAC. If it is still low or the zone still will not run, the cable may also be damaged. Separate the splice again, keep the two wires apart, and read the zone at the controller. It should read open (OL). A low reading means the two conductors are shorted together somewhere in the run."
  },
  {
   "id": "r_vnc4a",
@@ -322,13 +344,15 @@
    "Start",
    "Pulsing · Step 1",
    "Pulsing · Step 3",
-   "Valve not coming on · Step 7"
+   "Valve not coming on · Step 7",
+   "Valve not coming on · Step 8"
   ],
   "path": [
    "start",
    "p1",
    "p3",
    "vnc7",
+   "vnc7b",
    "r_wire"
   ],
   "text": "Voltage is leaving the controller but not arriving at the valve. Track the wires and locate the damage with a fault locator."
@@ -591,7 +615,7 @@
  {
   "id": "vnc7",
   "end": false,
-  "title": "Separate the splice. Twist the zone wire and the common together at the valve, go back to the controller, and read resistance on that zone.",
+  "title": "Separate the splice and keep the zone wire and the common apart at the valve. Go back to the controller and read resistance on that zone.",
   "crumb": "Valve not coming on · Step 7",
   "trail": [
    "Start",
@@ -603,6 +627,26 @@
    "p1",
    "p3",
    "vnc7"
+  ],
+  "text": "With the solenoid out and the two wires apart, nothing connects them but the cable itself, so this should read open (OL). Anything else means the two conductors are touching somewhere in the run. Open (OL) The conductors are not touching — continue Reads a low value or continuity The zone wire and common are shorted together somewhere in the run"
+ },
+ {
+  "id": "vnc7b",
+  "end": false,
+  "title": "Now twist the zone wire and the common together at the valve, go back to the controller, and read resistance on that zone again.",
+  "crumb": "Valve not coming on · Step 8",
+  "trail": [
+   "Start",
+   "Pulsing · Step 1",
+   "Pulsing · Step 3",
+   "Valve not coming on · Step 7"
+  ],
+  "path": [
+   "start",
+   "p1",
+   "p3",
+   "vnc7",
+   "vnc7b"
   ],
   "text": "This takes the solenoid out of the circuit. What is left is the wire run out and back, so the reading tells you whether the conductor is intact. About 5 Ω or less Wire run is intact — the fault was in the splice Still high, or open There is a break between the valve and the controller"
  },

@@ -515,7 +515,20 @@ vnc6: {
 
 vnc7: {
   crumb:"Valve not coming on \u00b7 Step 7",
-  q:"Separate the splice. Twist the zone wire and the common together at the valve, go back to the controller, and read resistance on that zone.",
+  q:"Separate the splice and keep the zone wire and the common apart at the valve. Go back to the controller and read resistance on that zone.",
+  detail:"With the solenoid out and the two wires apart, nothing connects them but the cable itself, so this should read open (OL). Anything else means the two conductors are touching somewhere in the run.",
+  note:"Controller off for a resistance reading.",
+  help:"splices",
+  help2:"meterOhms",
+  opts:[
+    {l:"Open (OL)", s:"The conductors are not touching \u2014 continue", go:"vnc7b"},
+    {l:"Reads a low value or continuity", s:"The zone wire and common are shorted together somewhere in the run", go:"r_short"}
+  ]
+},
+
+vnc7b: {
+  crumb:"Valve not coming on \u00b7 Step 8",
+  q:"Now twist the zone wire and the common together at the valve, go back to the controller, and read resistance on that zone again.",
   detail:"This takes the solenoid out of the circuit. What is left is the wire run out and back, so the reading tells you whether the conductor is intact.",
   note:"Controller off for a resistance reading.",
   help:"splices",
@@ -540,6 +553,7 @@ p1: {
 },
 
 p2: {
+  pwr:1,
   crumb:"Pulsing \u00b7 Step 2",
   q:"Unplug the controller, count to three, plug it back in. Check voltage again.",
   help:"fluctuating",
@@ -600,6 +614,7 @@ s2: {
 },
 
 s2b: {
+  pwr:1,
   crumb:"Staying on \u00b7 Step 2",
   q:"After unplugging, counting to three, and plugging back in \u2014 still over 18 VAC?",
   opts:[
@@ -629,7 +644,7 @@ r_vnc4a: {end:1, h:"No steady voltage over 18 VAC",
      "If that zone reads the same, the transformer is the likely problem.",
      "If that zone reads 18\u201330 VAC, the problem may be the controller. If there is a spare station, move the wire to it and see whether the zone runs."]},
 
-r_vnc4b: {end:1, h:"Voltage present but out of range",
+r_vnc4b: {end:1, pwr:1, h:"Voltage present but out of range",
   b:["Unplug the controller power, count to three, and plug it back in. Test again.",
      "If it still will not read 24\u201330 VAC, suspect a bad controller or transformer."]},
 
@@ -638,9 +653,15 @@ r_vnc6a: {end:1, h:"Over 18 VAC at the valve",
      "If it still will not run and the voltage is under 21 VAC, that valve may need more voltage than the run is delivering. Troubleshoot the wire path."]},
 
 r_splice: {end:1, h:"The splice was the fault", help:"splices",
-  b:["The wire run between the controller and the valve is intact, so the resistance you measured earlier was in the connection, not the conductor.",
+  b:["The wire run between the controller and the valve is intact, so the loss was in the connection, not the conductor.",
      "Cut back past the corroded copper to clean wire and remake the splice with new direct-bury connectors \u2014 not the ones you just took off, and not dry wire nuts.",
-     "Reconnect the solenoid and run the zone to confirm."]},
+     "Reconnect the solenoid, run the zone, and recheck the voltage at the valve. It should now read over 18 VAC.",
+     "If it is still low or the zone still will not run, the cable may also be damaged. Separate the splice again, keep the two wires apart, and read the zone at the controller. It should read open (OL). A low reading means the two conductors are shorted together somewhere in the run."]},
+
+r_short: {end:1, h:"Short in the wire run", help:"wireTrace",
+  b:["With the wires apart at the valve and the solenoid out of the circuit, the zone wire and the common still read as connected. Somewhere in the run the insulation is damaged and the two conductors are touching.",
+     "Split the run at splices or junction boxes and read each section with its far end open. The section that reads low holds the short.",
+     "Replace the damaged section rather than splicing into old, wet cable. Then reconnect the solenoid, run the zone, and verify over 18 VAC at the valve."]},
 
 r_wire: {end:1, h:"Problem is in the wiring", help:"wireTrace",
   b:["Voltage is leaving the controller but not arriving at the valve.",
@@ -680,6 +701,11 @@ var stack = ["start"];
 var picks = [];      // picks[i] = option index answered at stack[i] (null if unknown)
 var jumpBase = 0;    // leading stack entries reached by search rather than answered
 
+var PWRNOTE =
+  '<b>Before you cut power:</b> record the programs first &mdash; photograph the settings or write them down. ' +
+  'Older controllers without battery backup lose the schedule when power is removed. ' +
+  'If the controller is hardwired, do not unplug it; disconnect it only if you are qualified to.';
+
 var CAUTION =
   '<p class="caution"><b>Power safety.</b> A controller is connected to line voltage even with the dial off, ' +
   'and the common is not a neutral &mdash; on older or ungrounded installations it can be energized. ' +
@@ -701,7 +727,7 @@ function render(){
   var out = "";
 
   if(n.end){
-    out += '<div class="result"><h3 tabindex="-1">'+n.h+'</h3>'+
+    out += '<div class="result"><h3 tabindex="-1">'+n.h+'</h3>'+(n.pwr ? '<div class="note">'+PWRNOTE+'</div>' : '')+
            n.b.map(function(p){return "<p>"+p+"</p>";}).join("")+'</div>';
     if(n.help) out += '<div class="card">'+helpBlock(n.help,0)+'</div>';
     out += '<div class="bar">'+
@@ -713,6 +739,7 @@ function render(){
     out += '<p class="q" tabindex="-1">'+n.q+'</p>';
     if(n.detail) out += '<p class="detail">'+n.detail+'</p>';
     if(n.note) out += '<div class="note">'+n.note+'</div>';
+    if(n.pwr) out += '<div class="note">'+PWRNOTE+'</div>';
     out += '<div class="opts">';
     n.opts.forEach(function(o,i){
       out += '<button class="opt" data-go="'+i+'"><b>'+o.l+'</b>'+(o.s?'<span>'+o.s+'</span>':'')+'</button>';
