@@ -25,3 +25,7 @@ node tools/extract.mjs                                  # regenerate search/help
 | `app/.../MainActivity.kt` | WebView host, back/resume, gate persistence, share |
 | `app/.../Protocol.kt` | Validation of everything crossing the JS boundary |
 | `app/.../SearchActivity.kt`, `HelpActivity.kt` | Native search and meter-reference screens |
+
+## License and credit
+
+MIT License, Copyright (c) 2026 jercoates. You are free to use, adapt and share this project; the license requires that the copyright notice stays with any copy, so please keep the credit. See [LICENSE](LICENSE).
