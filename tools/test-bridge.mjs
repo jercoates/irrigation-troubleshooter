@@ -12,7 +12,7 @@ const script = html.match(/<script>([\s\S]*)<\/script>/)[1];
 
 function el() {
   return { hidden: false, scrollTop: 0, innerHTML: "", textContent: "", style: {},
-    addEventListener(t, f) { this.handlers = { ...this.handlers, [t]: f }; }, setAttribute() {}, removeAttribute() {}, querySelectorAll() { return []; }, querySelector() { return null; },
+    focus() {}, addEventListener(t, f) { this.handlers = { ...this.handlers, [t]: f }; }, setAttribute() {}, removeAttribute() {}, querySelectorAll() { return []; }, querySelector() { return null; },
     parentNode: { removeChild() {} } };
 }
 const els = { gate: el(), gatebtn: el(), app: el() };
@@ -71,6 +71,36 @@ for (const e of index) {
   const s = run("androidSummary()");
   assert.ok(s.includes(e.end ? "Result:" : "Currently at:"), `summary ${e.id}`);
 }
+
+// summary reports the answer actually given, even when two options lead to the same step
+run("androidInit(['start'], true)");
+run("stack.push(NODES.start.opts[1].go); picks.push(1); render()");
+assert.equal(run("NODES.start.opts[0].go"), run("NODES.start.opts[1].go"), "fixture: two options share a target");
+const sum = run("androidSummary()");
+assert.ok(sum.includes(run("toText(NODES.start.opts[1].l)")), "summary names the option the user chose");
+assert.ok(!sum.includes("→ " + run("toText(NODES.start.opts[0].l)")), "summary does not name the other option");
+
+// a search jump is reported as a jump, not as an invented path
+const deep = index.find((e) => e.path.length > 2);
+sandbox.__p = deep.path;
+run("androidGoto(__p)");
+const jumped = run("androidSummary()");
+assert.ok(jumped.includes("via symptom search"));
+assert.ok(!jumped.includes("1. "), "no fabricated answers before the jump point");
+// restoring a saved stack with an ambiguous step does not guess
+run("androidRestore(['start', NODES.start.opts[0].go])");
+assert.ok(run("androidSummary()").includes("(answer not recorded)"));
+
+// back-button state: system back only intercepted when the page can go back
+run("androidInit(['start'], true)");
+assert.equal(posted.at(-1).canBack, false);
+run("androidGoto(__p)");
+assert.equal(posted.at(-1).canBack, true);
+run("androidInit(['start'], true)");
+run("androidShowDisclaimer()");
+assert.equal(posted.at(-1).canBack, true);   // open disclaimer can be closed with Back
+run("androidInit(['start'], false)");
+assert.equal(posted.at(-1).canBack, false);  // unaccepted gate: Back is never consumed to skip it
 
 // the real gate button handler hides the gate and tells native
 run("androidInit(['start'], false)");

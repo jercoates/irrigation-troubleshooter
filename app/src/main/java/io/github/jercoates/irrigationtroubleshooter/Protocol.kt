@@ -8,7 +8,13 @@ import org.json.JSONObject
 sealed interface BridgeMessage {
     data object Ready : BridgeMessage
     data object Ack : BridgeMessage
-    data class State(val node: String, val crumb: String, val stack: List<String>, val isEnd: Boolean) : BridgeMessage
+    data class State(
+        val node: String,
+        val crumb: String,
+        val stack: List<String>,
+        val isEnd: Boolean,
+        val canBack: Boolean,
+    ) : BridgeMessage
 }
 
 /**
@@ -57,7 +63,10 @@ object Protocol {
                     val arr = o.optJSONArray("stack") ?: return null
                     val stack = sanitizeStack(List(arr.length()) { arr.optString(it, "") }) ?: return null
                     if (!isValidId(node) || stack.last() != node) return null
-                    BridgeMessage.State(node, o.optString("crumb").take(MAX_CRUMB), stack, o.optBoolean("isEnd", false))
+                    BridgeMessage.State(
+                        node, o.optString("crumb").take(MAX_CRUMB), stack,
+                        o.optBoolean("isEnd", false), o.optBoolean("canBack", false),
+                    )
                 }
                 else -> null
             }

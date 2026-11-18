@@ -12,9 +12,9 @@ data class SearchEntry(
     val path: List<String>,
     val text: String,
 ) {
-    internal val titleLc = title.lowercase()
-    internal val crumbLc = crumb.lowercase()
-    internal val textLc = text.lowercase()
+    internal val titleWords = SearchIndex.words(title)
+    internal val crumbWords = SearchIndex.words(crumb)
+    internal val textWords = SearchIndex.words(text)
 }
 
 object SearchIndex {
@@ -38,15 +38,32 @@ object SearchIndex {
         }
     }
 
-    /** Every whitespace-separated term must match somewhere; title hits outrank crumb hits outrank body hits. */
+    /** Lowercase words, split on anything that is not a letter or digit (so "valve?" and "valve" agree). */
+    internal fun words(s: String): List<String> {
+        val out = ArrayList<String>()
+        val cur = StringBuilder()
+        for (ch in s.lowercase()) {
+            if (ch.isLetterOrDigit()) cur.append(ch)
+            else if (cur.isNotEmpty()) { out.add(cur.toString()); cur.setLength(0) }
+        }
+        if (cur.isNotEmpty()) out.add(cur.toString())
+        return out
+    }
+
+    private fun hit(words: List<String>, term: String) = words.any { it.startsWith(term) }
+
+    /**
+     * Every term must match the START of some word (so "on" does not match "controller");
+     * title hits outrank crumb hits outrank body hits.
+     */
     fun search(entries: List<SearchEntry>, query: String): List<SearchEntry> {
-        val terms = query.lowercase().map { if (it.isWhitespace()) ' ' else it }.joinToString("").split(' ').filter { it.isNotEmpty() }
+        val terms = words(query)
         if (terms.isEmpty()) return emptyList()
         return entries
             .mapNotNull { e ->
                 var score = 0
                 for (t in terms) {
-                    val s = (if (t in e.titleLc) 3 else 0) + (if (t in e.crumbLc) 2 else 0) + (if (t in e.textLc) 1 else 0)
+                    val s = (if (hit(e.titleWords, t)) 3 else 0) + (if (hit(e.crumbWords, t)) 2 else 0) + (if (hit(e.textWords, t)) 1 else 0)
                     if (s == 0) return@mapNotNull null
                     score += s
                 }

@@ -39,6 +39,14 @@ class SearchIndexTest {
         assertTrue(SearchIndex.search(listOf(a, b), "   ").isEmpty())
     }
 
+    @Test fun matchesWordStartsAndIgnoresPunctuation() {
+        val a = SearchEntry("a", false, "Check the controller", "Zone", emptyList(), listOf("start", "a"), "Valve pulses?")
+        assertEquals(1, SearchIndex.search(listOf(a), "valve?").size)   // punctuation ignored
+        assertEquals(1, SearchIndex.search(listOf(a), "contr").size)    // prefix of a word
+        assertEquals(0, SearchIndex.search(listOf(a), "on").size)       // not the middle of "controller"
+        assertEquals(0, SearchIndex.search(listOf(a), "?!").size)
+    }
+
     @Test fun searchIsCaseInsensitive() {
         val a = SearchEntry("a", false, "Valve PULSES", "Zone", emptyList(), listOf("start", "a"), "")
         assertEquals(1, SearchIndex.search(listOf(a), "pulses").size)

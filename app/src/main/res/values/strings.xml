@@ -15,6 +15,10 @@
     <string name="search_no_results">No matching steps. Try a shorter or different word.</string>
     <string name="share_subject">Irrigation troubleshooting result</string>
     <string name="share_chooser">Share result</string>
+    <string name="jump_failed">Could not open that step. Please try again.</string>
+    <string name="start_failed">The guide did not start. Try again, or close the app and reopen it.</string>
+    <string name="retry">Try again</string>
+    <string name="close">Close</string>
     <string name="webview_too_old">This app needs a newer Android System WebView. Please update it from Google Play and try again.</string>
     <string name="about_body">Version %1$s\n\nStep-by-step electrical troubleshooting for traditional sprinkler controllers. Works entirely offline: no account, no network access, no data collected.\n\nProvided as-is, with no warranty of any kind. You are responsible for verifying any result against your own equipment, manufacturer documentation, and applicable code.</string>
 </resources>

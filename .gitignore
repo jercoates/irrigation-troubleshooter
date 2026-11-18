@@ -12,3 +12,6 @@ keystore.properties
 *.keystore
 *.p12
 Screenshots/
+
+# Keep the Play screenshots (the line above matches case-insensitively on Windows)
+!store/screenshots/

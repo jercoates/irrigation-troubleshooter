@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Guide data is in sync with index.html and the tree has no broken links
+        run: node tools/extract.mjs --check
+      - name: Page/native bridge logic
+        run: node tools/test-bridge.mjs
+      - name: Unit tests and lint
+        run: ./gradlew --no-daemon testDebugUnitTest lintRelease

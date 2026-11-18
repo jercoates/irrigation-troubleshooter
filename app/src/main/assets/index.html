@@ -87,6 +87,7 @@ button{font:inherit;cursor:pointer}
   overflow-y:auto;padding:24px 16px;
 }
 .gate[hidden]{display:none}
+.q:focus,h3:focus,.gate h2:focus{outline:none}
 .gate .inner{max-width:620px;margin:0 auto}
 .gate h2{font-size:19px;margin:8px 0 14px;line-height:1.3}
 .gate p{font-size:15px;line-height:1.6;margin:0 0 12px}
@@ -151,7 +152,7 @@ footer{color:var(--muted);font-size:12.5px;text-align:center;margin-top:26px;lin
 
 <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gatetitle">
   <div class="inner">
-    <h2 id="gatetitle">Before you use this guide</h2>
+    <h2 id="gatetitle" tabindex="-1">Before you use this guide</h2>
 
     <p class="strong">You do not need to be an irrigation technician to use this guide, but you do need to be safe around electricity. It assumes you understand basic electrical safety and can take a reading without putting yourself at risk. It is not a course in electrical work.</p>
 
@@ -167,7 +168,7 @@ footer{color:var(--muted);font-size:12.5px;text-align:center;margin-top:26px;lin
   </div>
 </div>
 
-<div id="app" aria-live="polite"></div>
+<div id="app"></div>
 
 <details>
   <summary>Safety notes</summary>
@@ -676,6 +677,8 @@ r_fixed: {end:1, h:"Resolved",
 };
 
 var stack = ["start"];
+var picks = [];      // picks[i] = option index answered at stack[i] (null if unknown)
+var jumpBase = 0;    // leading stack entries reached by search rather than answered
 
 var CAUTION =
   '<p class="caution"><b>Power safety.</b> A controller is connected to line voltage even with the dial off, ' +
@@ -687,7 +690,7 @@ function esc(s){ return String(s).replace(/&(?![a-zA-Z#][a-zA-Z0-9]*;)/g,"&amp;"
 function helpBlock(key, idx){
   var h = HELP[key];
   if(!h) return "";
-  return '<button class="helpbtn" data-help="'+idx+'">Help &mdash; '+h.t+'</button>'+
+  return '<button class="helpbtn" data-help="'+idx+'" aria-expanded="false" aria-controls="help'+idx+'">Help &mdash; '+h.t+'</button>'+
          '<div class="help" id="help'+idx+'" hidden><h4>'+h.t+'</h4>'+
          h.b.map(function(p){return "<p>"+p+"</p>";}).join("")+'</div>';
 }
@@ -698,7 +701,7 @@ function render(){
   var out = "";
 
   if(n.end){
-    out += '<div class="result"><h3>'+n.h+'</h3>'+
+    out += '<div class="result"><h3 tabindex="-1">'+n.h+'</h3>'+
            n.b.map(function(p){return "<p>"+p+"</p>";}).join("")+'</div>';
     if(n.help) out += '<div class="card">'+helpBlock(n.help,0)+'</div>';
     out += '<div class="bar">'+
@@ -707,7 +710,7 @@ function render(){
   } else {
     out += '<div class="card">';
     out += '<div class="crumb">'+n.crumb+'</div>';
-    out += '<p class="q">'+n.q+'</p>';
+    out += '<p class="q" tabindex="-1">'+n.q+'</p>';
     if(n.detail) out += '<p class="detail">'+n.detail+'</p>';
     if(n.note) out += '<div class="note">'+n.note+'</div>';
     out += '<div class="opts">';
@@ -732,7 +735,9 @@ function render(){
 
   app.querySelectorAll("[data-go]").forEach(function(b){
     b.addEventListener("click", function(){
-      stack.push(n.opts[+b.getAttribute("data-go")].go);
+      var oi = +b.getAttribute("data-go");
+      stack.push(n.opts[oi].go);
+      picks.push(oi);
       render();
     });
   });
@@ -740,15 +745,18 @@ function render(){
     b.addEventListener("click", function(){
       var d = document.getElementById("help"+b.getAttribute("data-help"));
       d.hidden = !d.hidden;
+      b.setAttribute("aria-expanded", d.hidden ? "false" : "true");
       b.textContent = (d.hidden ? "Help \u2014 " : "Hide \u2014 ") + b.textContent.replace(/^(Help|Hide) \u2014 /,"");
     });
   });
   var bk = app.querySelector('[data-act="back"]');
-  if(bk) bk.addEventListener("click", function(){ stack.pop(); render(); });
-  postState();
+  if(bk) bk.addEventListener("click", function(){ popStep(); render(); });
   app.querySelectorAll('[data-act="restart"]').forEach(function(b){
-    b.addEventListener("click", function(){ stack = ["start"]; render(); });
+    b.addEventListener("click", function(){ resetStack(["start"], false); render(); });
   });
+  var hd = app.querySelector(".q, h3");
+  if(hd && bridgeReady) hd.focus({preventScroll:true});
+  postState();
 }
 
 render();
@@ -766,7 +774,22 @@ function post(msg){
 function postState(){
   if(!bridgeReady) return;
   var n = NODES[stack[stack.length-1]];
-  post({type:"state", node:stack[stack.length-1], crumb:n.end ? "Result" : (n.crumb||""), stack:stack, isEnd:!!n.end});
+  var g = gateEl();
+  var canBack = stack.length > 1 || (!!g && !g.hidden && gateAcked);
+  post({type:"state", node:stack[stack.length-1], crumb:n.end ? "Result" : (n.crumb||""), stack:stack, isEnd:!!n.end, canBack:canBack});
+}
+function popStep(){
+  stack.pop(); picks.pop();
+  if(jumpBase > stack.length-1) jumpBase = Math.max(0, stack.length-1);
+}
+// Replace the whole stack. fromSearch: the entries are a route we filled in, not answers the user gave.
+function resetStack(path, fromSearch){
+  stack = path.slice(); picks = []; jumpBase = fromSearch ? stack.length-1 : 0;
+  for(var i=0;i<stack.length-1;i++){
+    var idx = [];
+    (NODES[stack[i]].opts||[]).forEach(function(o,k){ if(o.go === stack[i+1]) idx.push(k); });
+    picks.push(idx.length === 1 ? idx[0] : null);
+  }
 }
 function has(o,k){ return Object.prototype.hasOwnProperty.call(o,k); }
 
@@ -787,18 +810,19 @@ function setGate(show){
   var g = gateEl();
   if(!g) return;
   g.hidden = !show;
-  if(show) g.scrollTop = 0;
+  if(show){ g.scrollTop = 0; var h = document.getElementById("gatetitle"); if(h) h.focus({preventScroll:true}); }
   // keep screen readers and keyboards out of the guide while the disclaimer is up
   Array.prototype.forEach.call(document.querySelectorAll(".wrap > :not(#gate)"), function(el){
     if(show) el.setAttribute("inert",""); else el.removeAttribute("inert");
   });
+  postState();
 }
 
 // native -> page: first call after load. Restores position and gate state together.
 function androidInit(savedStack, acked){
   gateAcked = !!acked;
   setGate(!gateAcked);
-  stack = validStack(savedStack) ? savedStack.slice() : ["start"];
+  resetStack(validStack(savedStack) ? savedStack : ["start"], false);
   bridgeReady = true;
   render();
   return true;
@@ -810,19 +834,19 @@ function androidBack(){
     if(gateAcked){ setGate(false); return true; }
     return false;                      // gate not yet accepted: never skip it
   }
-  if(stack.length > 1){ stack.pop(); render(); return true; }
+  if(stack.length > 1){ popStep(); render(); return true; }
   return false;
 }
 // Jump from search. `path` is start -> target so Back keeps working.
 function androidGoto(path){
   if(!validStack(path)) return false;
-  stack = path.slice(); render(); return true;
+  resetStack(path, true); render(); return true;
 }
 function androidRestore(savedStack){
   if(!validStack(savedStack)) return false;
-  stack = savedStack.slice(); render(); return true;
+  resetStack(savedStack, false); render(); return true;
 }
-function androidStartOver(){ stack = ["start"]; render(); return true; }
+function androidStartOver(){ resetStack(["start"], false); render(); return true; }
 function androidShowDisclaimer(){ setGate(true); return true; }
 
 function toText(html){
@@ -831,10 +855,14 @@ function toText(html){
 // Path taken + final result as plain text, for the share sheet.
 function androidSummary(){
   var lines = ["Irrigation Electrical Troubleshooting", ""];
-  for(var i=0;i<stack.length-1;i++){
-    var n = NODES[stack[i]], next = stack[i+1], chosen = "";
-    (n.opts||[]).forEach(function(o){ if(!chosen && o.go === next) chosen = o.l; });
-    lines.push((i+1)+". "+toText(n.q)+" → "+toText(chosen));
+  // Only report answers the user actually gave; never invent a path.
+  if(jumpBase > 0){
+    lines.push("Jumped straight to: "+toText(NODES[stack[jumpBase]].crumb || NODES[stack[jumpBase]].q || NODES[stack[jumpBase]].h)+" (via symptom search)");
+  }
+  for(var i=jumpBase;i<stack.length-1;i++){
+    var n = NODES[stack[i]];
+    var label = picks[i] === null || picks[i] === undefined ? "(answer not recorded)" : toText(n.opts[picks[i]].l);
+    lines.push((i-jumpBase+1)+". "+toText(n.q)+" → "+label);
   }
   var last = NODES[stack[stack.length-1]];
   lines.push("");

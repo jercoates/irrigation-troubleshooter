@@ -74,7 +74,22 @@ const index = Object.keys(NODES).sort().map((id) => {
   };
 });
 
-const help = Object.keys(HELP).map((key) => ({ key, title: plain(HELP[key].t), body: HELP[key].b }));
+// Reference sections that live in the page as <details> blocks (Safety notes, meter types, ...).
+// Flattened to simple paragraphs so the native Meter reference screen shows them too.
+const inline = (h) => h.replace(/<(?!\/?(b|i|em|strong)\b)[^>]*>/gi, "").replace(/\s+/g, " ").trim();
+const detailsSections = [...html.matchAll(/<details>\s*<summary>([\s\S]*?)<\/summary>\s*<div class="dbody">([\s\S]*?)<\/div>\s*<\/details>/g)].map((m, i) => {
+  const body = [];
+  for (const t of m[2].matchAll(/<(h4|p|li|tr)\b[^>]*>([\s\S]*?)<\/\1>/g)) {
+    if (t[1] === "h4") body.push("<b>" + inline(t[2]) + "</b>");
+    else if (t[1] === "li") body.push("&#8226; " + inline(t[2]));
+    else if (t[1] === "tr") body.push(inline([...t[2].matchAll(/<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/g)].map((c) => c[1]).join(" &mdash; ")));
+    else body.push(inline(t[2]));
+  }
+  return { key: "ref" + i, title: plain(m[1]), body: body.filter(Boolean) };
+});
+if (detailsSections.length === 0) { console.error("No <details> reference sections found"); process.exit(1); }
+
+const help = [...detailsSections, ...Object.keys(HELP).map((key) => ({ key, title: plain(HELP[key].t), body: HELP[key].b }))];
 
 const out = {
   "search-index.json": JSON.stringify(index, null, 1) + "\n",

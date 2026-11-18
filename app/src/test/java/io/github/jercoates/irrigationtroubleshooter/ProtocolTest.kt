@@ -15,7 +15,9 @@ class ProtocolTest {
 
     @Test fun parsesState() {
         val m = Protocol.parse("""{"type":"state","node":"b","crumb":"Zone","stack":["start","a","b"],"isEnd":true}""")
-        assertEquals(BridgeMessage.State("b", "Zone", listOf("start", "a", "b"), true), m)
+        assertEquals(BridgeMessage.State("b", "Zone", listOf("start", "a", "b"), true, false), m)
+        val back = Protocol.parse("""{"type":"state","node":"a","stack":["start","a"],"canBack":true}""")
+        assertEquals(true, (back as BridgeMessage.State).canBack)
     }
 
     @Test fun rejectsMalformedOrHostileMessages() {
@@ -24,7 +26,8 @@ class ProtocolTest {
         assertNull(Protocol.parse("""{"type":"evil"}"""))
         assertNull(Protocol.parse("""{"type":"state","node":"b","stack":["start","a"]}""")) // node != top of stack
         assertNull(Protocol.parse("""{"type":"state","node":"a","stack":["x","a"]}"""))      // does not start at "start"
-        assertNull(Protocol.parse("""{"type":"state","node":"a\"});alert(1);//","stack":["start"]}"""))
+        // injection attempt in a position that is consistent (node == top of stack): rejected by the id check itself
+        assertNull(Protocol.parse("""{"type":"state","node":"a\"});alert(1);//","stack":["start","a\"});alert(1);//"]}"""))
         assertNull(Protocol.parse("""{"type":"state","node":"a","stack":["start","a b"]}"""))
         assertNull(Protocol.parse("""{"type":"ready","pad":"${"x".repeat(Protocol.MAX_MESSAGE_CHARS)}"}"""))
     }

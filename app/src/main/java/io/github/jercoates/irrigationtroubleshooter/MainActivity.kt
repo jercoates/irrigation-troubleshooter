@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
 import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
@@ -41,12 +42,15 @@ class MainActivity : AppCompatActivity() {
     private var pageReady = false
     private var onResult = false
     private var pendingPath: List<String>? = null
+    private lateinit var backCallback: OnBackPressedCallback
+    private var startDialog: AlertDialog? = null
+    private val readyTimeout = Runnable { if (!pageReady) onStartFailed() }
 
     private val searchLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { r ->
         val path = r.data?.getStringArrayListExtra(SearchActivity.EXTRA_PATH)
         Protocol.sanitizeStack(path)?.let {
             // After an activity recreation the page may not be ready yet; apply on "ready" instead.
-            if (pageReady) js("androidGoto(${Protocol.stackToJs(it)})") else pendingPath = it
+            if (pageReady) jumpTo(it) else pendingPath = it
         }
     }
 
@@ -80,13 +84,14 @@ class MainActivity : AppCompatActivity() {
         }
         setUpWebView()
 
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+        // Enabled only while the page has somewhere to go back to (a previous step, or an open
+        // disclaimer). Otherwise the system handles Back, which keeps Android's back-to-home animation.
+        backCallback = object : OnBackPressedCallback(false) {
             override fun handleOnBackPressed() {
-                if (!pageReady) { finish(); return }
-                // The page walks the tree back one step; if it cannot, the app closes.
-                webView.evaluateJavascript("androidBack()") { if (it != "true") finish() }
+                webView.evaluateJavascript("androidBack()", null)
             }
-        })
+        }
+        onBackPressedDispatcher.addCallback(this, backCallback)
 
         webView.loadUrl(START_URL)
     }
@@ -95,7 +100,7 @@ class MainActivity : AppCompatActivity() {
     private fun setUpWebView() {
         webView.visibility = View.INVISIBLE   // revealed once position + gate state are restored
         // Safety net: never leave the user on a blank screen if the page fails to start.
-        webView.postDelayed({ if (!pageReady) webView.visibility = View.VISIBLE }, READY_TIMEOUT_MS)
+        webView.postDelayed(readyTimeout, READY_TIMEOUT_MS)
         webView.settings.apply {
             javaScriptEnabled = true          // the bundled guide is a script
             allowFileAccess = false
@@ -122,7 +127,8 @@ class MainActivity : AppCompatActivity() {
 
             override fun onRenderProcessGone(view: WebView, detail: RenderProcessGoneDetail): Boolean {
                 // Position is already persisted; restart cleanly and resume.
-                if (++renderCrashes > MAX_RENDER_CRASHES) finish() else recreate()
+                // Count real crashes only; the system also reclaims renderers for memory.
+                if (detail.didCrash() && ++renderCrashes > MAX_RENDER_CRASHES) finish() else recreate()
                 return true
             }
         }
@@ -139,6 +145,8 @@ class MainActivity : AppCompatActivity() {
             BridgeMessage.Ready -> {
                 val stack = Protocol.stackToJs(pendingPath ?: store.stack)
                 pendingPath = null
+                renderCrashes = 0
+                startDialog?.dismiss()
                 webView.evaluateJavascript("androidInit($stack, ${store.acknowledged})") {
                     pageReady = true
                     webView.visibility = View.VISIBLE
@@ -146,6 +154,7 @@ class MainActivity : AppCompatActivity() {
             }
             BridgeMessage.Ack -> store.acknowledged = true
             is BridgeMessage.State -> {
+                backCallback.isEnabled = m.canBack
                 store.stack = m.stack
                 supportActionBar?.subtitle = m.crumb.ifEmpty { null }
                 if (onResult != m.isEnd) { onResult = m.isEnd; invalidateOptionsMenu() }
@@ -156,6 +165,22 @@ class MainActivity : AppCompatActivity() {
 
     private fun js(code: String, callback: ((String?) -> Unit)? = null) {
         if (pageReady) webView.evaluateJavascript(code, callback)
+    }
+
+    private fun jumpTo(path: List<String>) {
+        js("androidGoto(${Protocol.stackToJs(path)})") {
+            if (it != "true") Toast.makeText(this, R.string.jump_failed, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun onStartFailed() {
+        if (isFinishing || isDestroyed) return
+        startDialog = AlertDialog.Builder(this)
+            .setMessage(R.string.start_failed)
+            .setCancelable(false)
+            .setPositiveButton(R.string.retry) { _, _ -> recreate() }
+            .setNegativeButton(R.string.close) { _, _ -> finish() }
+            .show()
     }
 
     private fun applyKeepScreenOn() {
@@ -215,6 +240,7 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() { if (::webView.isInitialized) webView.onPause(); super.onPause() }
 
     override fun onDestroy() {
+        if (::webView.isInitialized) webView.removeCallbacks(readyTimeout)
         if (::webView.isInitialized) {
             (webView.parent as? ViewGroup)?.removeView(webView)
             webView.destroy()
@@ -223,7 +249,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private companion object {
-        const val READY_TIMEOUT_MS = 4000L
+        const val READY_TIMEOUT_MS = 8000L
         const val MAX_RENDER_CRASHES = 2
         var renderCrashes = 0
         const val BRIDGE_NAME = "androidBridge"
